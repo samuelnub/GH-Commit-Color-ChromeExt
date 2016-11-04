@@ -15,31 +15,35 @@
         }
     }
 
-    // Array of rgb(?,?,?) strings
-    let originalLegend = [];
+    // Object of numbered rgb(?,?,?) strings
+    let originalLegend = {};
     const legendElements = document.getElementsByClassName("legend")[0].getElementsByTagName("li");
-    for (let element of legendElements) {
-        originalLegend.push(element.style.backgroundColor);
-        console.log("Original legend: " + element.style.backgroundColor + " with typeof: " + typeof element.style.backgroundColor);
+    for (let i = 0; i < legendElements.length; i++) {
+        originalLegend[i] = legendElements[i].style.backgroundColor;
     }
+
+    (function() {
+        chrome.storage.sync.set({"originalLegend" : originalLegend}, function() {
+            console.log("Sync'd original legend from the site itself! Here:");
+            console.log(originalLegend);
+        });
+    })();
 
     let changeColor = (function (changes, namespace) {
         console.log("Attempting to change colours!");
 
         chrome.storage.sync.get("ourLegend", function (items) {
-            console.log("Attained our sync'd legend" + items);
-            const newLegend = items;
+            const newLegend = items["ourLegend"];
             if (!newLegend[0] || !newLegend[1] || !newLegend[2] || !newLegend[3] || !newLegend[4]) {
                 console.log("Our legend isn't defined!");
                 // return;
             }
 
-            console.log("Our legend: " + newLegend[0]);
+            console.log("Our legend: ");
+            console.log(newLegend);
 
             // of loop grabs the object as a whole
             for (let square of calenderSquares) {
-                console.log("Changing colour for: " + square.val);
-
                 switch (square.val) {
                     case originalLegend[0]:
                         square.element.setAttribute("fill", newLegend[0]);
@@ -77,13 +81,6 @@
         "IV"
     ];
 
-    function syncOriginal() {
-        let legend = { 0: originalLegend[0], 1: originalLegend[1], 2: originalLegend[2], 3: originalLegend[3], 4: originalLegend[4] };
-        chrome.storage.sync.set({"originalLegend" : legend }, function() {
-            console.log("Since our legend isn't defined, we'll set it to GitHub's original colour scheme");
-        });
-    }
-
     function hexToRgb(hex) {
         let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
@@ -99,9 +96,9 @@
 
     function rgbStringToRgb(rgbString) {
         return {
-            r: rgb.replace(/[^\d,]/g, '').split(',')[0],
-            g: rgb.replace(/[^\d,]/g, '').split(',')[1],
-            b: rgb.replace(/[^\d,]/g, '').split(',')[2]
+            r: rgbString.replace(/[^\d,]/g, '').split(',')[0],
+            g: rgbString.replace(/[^\d,]/g, '').split(',')[1],
+            b: rgbString.replace(/[^\d,]/g, '').split(',')[2]
         };
     }
 
