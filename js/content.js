@@ -1,39 +1,39 @@
 function god() {
-    const calenderSvg = document.getElementsByClassName("js-calendar-graph-svg").item(0);  
-    if(!calenderSvg)
-    {
+    const calenderSvg = document.getElementsByClassName("js-calendar-graph-svg").item(0);
+    if (!calenderSvg) {
         console.log("Can't get svg element! :(");
         return;
     }
 
-    // Key-value mappings of elements to string colour values
+    // Array of objects with the members: element and rgb value (string)
     let calenderSquares = [];
     const calenderColumns = calenderSvg.getElementsByTagName("g")[0].getElementsByTagName("g");
-    for(let column of calenderColumns)
-    {
+    for (let column of calenderColumns) {
         let weekSquares = column.getElementsByTagName("rect");
-        for(let square of weekSquares)
-        {
-            calenderSquares.push({ element : square, val : rgbString(hexToRgb(square.getAttribute("fill")).r, hexToRgb(square.getAttribute("fill")).g, hexToRgb(square.getAttribute("fill")).b)});
+        for (let square of weekSquares) {
+            calenderSquares.push({ element: square, val: rgbString(hexToRgb(square.getAttribute("fill")).r, hexToRgb(square.getAttribute("fill")).g, hexToRgb(square.getAttribute("fill")).b) });
         }
     }
 
     let originalLegend = [];
     const legendElements = document.getElementsByClassName("legend")[0].getElementsByTagName("li");
-    for(let element of legendElements)
-    {
+    for (let element of legendElements) {
         originalLegend.push(element.style.backgroundColor);
         console.log("Original legend: " + element.style.backgroundColor + " with typeof: " + typeof element.style.backgroundColor);
     }
 
-    let changeColor = (function() {
+    let changeColor = (function () {
         console.log("ayy lmao!");
         // Our sync object should be an array
         let newLegend = {};
-        
-        chrome.storage.sync.get("ourLegend", function(obj) {
+
+        chrome.storage.sync.get("ourLegend", function (obj) {
             console.log("Attained our sync'd legend" + obj);
             newLegend = obj;
+            if (!newLegend[0] || !newLegend[1] || !newLegend[2] || !newLegend[3] || !newLegend[4]) {
+                console.log("Our legend isn't defined!");
+                return;
+            }
 
             // square variable is the element, calenderSquares[square] will be the value
             for (let square in calenderSquares) {
