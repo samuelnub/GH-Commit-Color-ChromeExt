@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+
+  "name": "GitHub Commit Color",
+  "description": "Little extension that lets you change the colour of those commit tiles.",
+  "version": "0.1.0",
+
+  "browser_action": {
+    "default_icon": "icon.jpg",
+    "default_popup": "html/popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*",
+        "http://github.com/*",
+        "https://www.github.com/*",
+        "http://www.github.com/*"
+      ],
+      "js": [
+        "js/content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}
