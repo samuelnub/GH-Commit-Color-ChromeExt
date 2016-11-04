@@ -17,10 +17,12 @@
   "content_scripts": [
     {
       "matches": [
-        "https://github.com/*",
-        "http://github.com/*",
-        "https://www.github.com/*",
-        "http://www.github.com/*"
+        "*://github.com/*",
+        "*://www.github.com/*"
+      ],
+      "exclude_matches": [
+        "*://github.com/*/*",
+        "*://www.github.com/*/*"
       ],
       "js": [
         "js/content.js"

@@ -1,7 +1,7 @@
-function god() {
+(function() {
     const calenderSvg = document.getElementsByClassName("js-calendar-graph-svg").item(0);
     if (!calenderSvg) {
-        console.log("Can't get svg element! :(");
+        console.log("Can't get svg element! I guess this isn't a user's profile page :(");
         return;
     }
 
@@ -15,6 +15,7 @@ function god() {
         }
     }
 
+    // Array of rgb(?,?,?) strings
     let originalLegend = [];
     const legendElements = document.getElementsByClassName("legend")[0].getElementsByTagName("li");
     for (let element of legendElements) {
@@ -22,41 +23,41 @@ function god() {
         console.log("Original legend: " + element.style.backgroundColor + " with typeof: " + typeof element.style.backgroundColor);
     }
 
-    let changeColor = (function () {
-        console.log("ayy lmao!");
-        // Our sync object should be an array
-        let newLegend = {};
+    let changeColor = (function (changes, namespace) {
+        console.log("Attempting to change colours!");
 
-        chrome.storage.sync.get("ourLegend", function (obj) {
-            console.log("Attained our sync'd legend" + obj);
-            newLegend = obj;
+        chrome.storage.sync.get("ourLegend", function (items) {
+            console.log("Attained our sync'd legend" + items);
+            const newLegend = items;
             if (!newLegend[0] || !newLegend[1] || !newLegend[2] || !newLegend[3] || !newLegend[4]) {
                 console.log("Our legend isn't defined!");
-                return;
+                // return;
             }
 
-            // square variable is the element, calenderSquares[square] will be the value
-            for (let square in calenderSquares) {
-                console.log("Changing colour for: " + calenderSquares[square].val);
+            console.log("Our legend: " + newLegend[0]);
 
-                switch (calenderSquares[square].val) {
+            // of loop grabs the object as a whole
+            for (let square of calenderSquares) {
+                console.log("Changing colour for: " + square.val);
+
+                switch (square.val) {
                     case originalLegend[0]:
-                        calenderSquares[square].element.setAttribute("fill", newLegend[0]);
+                        square.element.setAttribute("fill", newLegend[0]);
                         break;
                     case originalLegend[1]:
-                        calenderSquares[square].element.setAttribute("fill", newLegend[1]);
+                        square.element.setAttribute("fill", newLegend[1]);
                         break;
                     case originalLegend[2]:
-                        calenderSquares[square].element.setAttribute("fill", newLegend[2]);
+                        square.element.setAttribute("fill", newLegend[2]);
                         break;
                     case originalLegend[3]:
-                        calenderSquares[square].element.setAttribute("fill", newLegend[3]);
+                        square.element.setAttribute("fill", newLegend[3]);
                         break;
                     case originalLegend[4]:
-                        calenderSquares[square].element.setAttribute("fill", newLegend[4]);
+                        square.element.setAttribute("fill", newLegend[4]);
                         break;
                     default:
-                        console.log("Couldn't find a colour match for square and legend :( " + calenderSquares[square].val);
+                        console.log("Couldn't find a colour match for square and legend :( " + square.val);
                         break;
                 }
             }
@@ -76,6 +77,13 @@ function god() {
         "IV"
     ];
 
+    function syncOriginal() {
+        let legend = { 0: originalLegend[0], 1: originalLegend[1], 2: originalLegend[2], 3: originalLegend[3], 4: originalLegend[4] };
+        chrome.storage.sync.set({"originalLegend" : legend }, function() {
+            console.log("Since our legend isn't defined, we'll set it to GitHub's original colour scheme");
+        });
+    }
+
     function hexToRgb(hex) {
         let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
@@ -89,6 +97,12 @@ function god() {
         return "rgb(" + r + ", " + g + ", " + b + ")";
     }
 
-};
+    function rgbStringToRgb(rgbString) {
+        return {
+            r: rgb.replace(/[^\d,]/g, '').split(',')[0],
+            g: rgb.replace(/[^\d,]/g, '').split(',')[1],
+            b: rgb.replace(/[^\d,]/g, '').split(',')[2]
+        };
+    }
 
-god();
+})();
