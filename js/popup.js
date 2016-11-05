@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", function() {
             // initially setup so the ranges/background reflect newLegend
             const setFromNewLegend = function() {
                 for(let i = 0; i < Object.keys(originalLegend).length; i++) {
-                    legendDivs[i].style.backgroundColor = (newLegend[i]) ? newLegend[i] : originalLegend[i];
+                    legendDivs[i].style.backgroundColor = (newLegend[i] ? newLegend[i] : originalLegend[i]);
                     for(let j = 0; j < 3; j++) {
-                        colRanges[i * 3 + j].value = rgbStringToRgb((newLegend[i]) ? newLegend[i] : originalLegend[i])[j] * (100 / 255);
+                        colRanges[i * 3 + j].value = rgbStringToRgb((newLegend[i] ? newLegend[i] : originalLegend[i]))[j] * (100 / 255);
                     }
                 }
             };
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             console.log("equal! " + equalCount);
                         }
                     }
-                    chrome.storage.sync.set((equalCount != Object.keys(originalLegend).length) ? {"ourLegend" : newLegend} : { "ourLegend" : {0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined}}, function() {
+                    chrome.storage.sync.set((equalCount != Object.keys(originalLegend).length ? {"ourLegend" : newLegend} : { "ourLegend" : {0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined}}), function() {
                         debugLog("Applied!");
                     });
                 }, false);
