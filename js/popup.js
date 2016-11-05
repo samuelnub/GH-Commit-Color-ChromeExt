@@ -83,7 +83,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 }, false);
 
                 document.getElementById("title").addEventListener("click", function() {
-                    document.getElementById("title").innerHTML = "GitHub Commit <i><b>Colour</b></i> Changer";
+                    if(document.getElementById("title").innerText == "GitHub Commit Color Changer") {
+                        document.getElementById("background").setAttribute("style", "background-image: url(\"http://i.imgur.com/p6F7DVy.png\")");
+                        document.getElementById("title").innerHTML = "GitHub Commit <i><b><u>Colour</u></b></i> Changer";
+                        debugLog("Are you feelin' like a Brit now?");
+                    } else {
+                        document.getElementById("background").removeAttribute("style");
+                        document.getElementById("title").innerHTML = "GitHub Commit Color Changer";
+                        debugLog("Howdy y'all!");
+                    }
                 }, false);
             })();
         });

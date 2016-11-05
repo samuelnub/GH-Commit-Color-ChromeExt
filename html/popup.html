@@ -1,38 +1,51 @@
 <html>
-    <head>
-        <title>Hey now, you're an all star</title>
-        <script src="../js/popup.js"></script>
-        <link rel="stylesheet" type="text/css" href="../css/popup.css">
-    </head>
-    <body>
-        <div>
-            <p id="title">
-                GitHub Commit Color Changer
-            </p>
+
+<head>
+    <title>Hey now, you're an all star</title>
+    <script src="../js/popup.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/popup.css">
+</head>
+
+<body>
+    <div class="all">
+        <div class="background" id="background"></div>
+        <div class="content">
+            <div>
+                <p id="title">
+                    GitHub Commit Color Changer
+                </p>
+            </div>
+            <div class="legend" id="0">
+                <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range"
+                    class="colRange" value="50">
+            </div>
+            <div class="legend" id="1">
+                <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range"
+                    class="colRange" value="50">
+            </div>
+            <div class="legend" id="2">
+                <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range"
+                    class="colRange" value="50">
+            </div>
+            <div class="legend" id="3">
+                <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range"
+                    class="colRange" value="50">
+            </div>
+            <div class="legend" id="4">
+                <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range"
+                    class="colRange" value="50">
+            </div>
+            <div id="buttons">
+                <button id="apply">Apply</button>
+                <button id="reset">Reset</button>
+            </div>
+            <div>
+                <a href="https://github.com/samuelnub/GH-Commit-Color-ChromeExt" target="_blank">About</a>
+                <p id="debug">
+                </p>
+            </div>
         </div>
-        <div class="legend" id="0">
-            <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50">
-        </div>
-        <div class="legend" id="1">
-            <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50">
-        </div>
-        <div class="legend" id="2">
-            <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50">
-        </div>
-        <div class="legend" id="3">
-            <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50">
-        </div>
-        <div class="legend" id="4">
-            <input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50"><input type="range" class="colRange" value="50">
-        </div>
-        <div id="buttons">
-            <button id="apply">Apply</button>
-            <button id="reset">Reset</button>
-        </div>
-        <div>
-            <a href="https://github.com/samuelnub/GH-Commit-Color-ChromeExt" target="_blank">About</a>
-            <p id="debug">
-            </p>
-        </div>
-    </body>
+    </div>
+</body>
+
 </html>
