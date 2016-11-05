@@ -11,7 +11,6 @@ body {
   text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-shadow: 0px 2px 2px rgba(0,0,0,0.5);
-  background-color: white;
   
   position: absolute;
   top: 0;
@@ -22,6 +21,8 @@ body {
   height: 90%;
   margin: auto;
 
+  transition: all 0.1s ease-in-out;
+
   /*animation on body load*/
   animation-name: onLoad;
   animation-iteration-count: 1;
@@ -31,13 +32,11 @@ body {
 
 @keyframes onLoad {
   0% {
-    transform: scale(0.5);
-    transform: translateY(-512px);
+    transform: scale(0.5) translateY(-512px);
     opacity: 0;
   }
   100% {
-    transform: scale(1);    
-    transform: translateY(0px);
+    transform: scale(1) translateY(0px);    
     opacity: 1;
   }
 }
@@ -68,12 +67,16 @@ div {
   margin-top: 8px;
   margin-bottom: 8px;
   box-shadow: 0px 4px 4px rgba(0,0,0,0.5);
+  opacity: 0.5;
+  filter: grayscale(1); 
   transition: all 0.1s ease-in-out;
 }
 
 .legend:hover {
   border-radius: 16px;
   box-shadow: 0px 8px 8px rgba(0,0,0,0.5);
+  opacity: 1;
+  filter: grayscale(0);
   transform: scale(1.05);
 }
 
@@ -84,6 +87,7 @@ button {
   border: 4px solid rgba(0,0,0,0.2);
   padding: 6px;
   margin: 4px;
+  outline: none;
   font-size: 1.5em;
   font-family: inherit;
   text-shadow: inherit;
@@ -106,7 +110,7 @@ button:active {
 }
 
 #debug {
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 input[type=range] {

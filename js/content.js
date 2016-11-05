@@ -29,18 +29,32 @@
         });
     })();
 
-    let changeColor = (function (changes, namespace) {
-        console.log("Attempting to change colours!");
-
+    const changeColor = function (changes, namespace) {
         chrome.storage.sync.get("ourLegend", function (items) {
             const newLegend = items["ourLegend"];
-            if (!newLegend[0] || !newLegend[1] || !newLegend[2] || !newLegend[3] || !newLegend[4]) {
-                console.log("Our legend isn't defined!");
-                // return;
+            let diffCount = 0;
+            for (let i = 0; i < Object.keys(originalLegend).length; i++) {
+                if (originalLegend[i] != legendElements[i].style.backgroundColor) {
+                    diffCount++;
+                    console.log("There's a diff! " + diffCount);
+                }
             }
+            if (diffCount != 0) {
+                Object.assign(newLegend, originalLegend);
+                console.log("The site's current legend doesn't match its original one!");
+            }
+            else {
+                return;
+            }// TODO: here :(
 
             console.log("Our legend: ");
             console.log(newLegend);
+
+
+
+            for (let i = 0; i < legendElements.length; i++) {
+                legendElements[i].setAttribute("style", "background-color: " + newLegend[i]);
+            }
 
             // of loop grabs the object as a whole
             for (let square of calenderSquares) {
@@ -65,13 +79,10 @@
                         break;
                 }
             }
-
-            for (let i = 0; i < legendElements.length; i++) {
-                legendElements[i].setAttribute("style", "background-color: " + newLegend[i]);
-            }
         });
-    })();
-
+    };
+    // Can't have iife and pass it to the listener callback, well at least not that i know of :(
+    changeColor();
     chrome.storage.onChanged.addListener(changeColor);
 
     const johnLegend = [
