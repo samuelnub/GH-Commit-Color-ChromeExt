@@ -5,12 +5,12 @@ document.addEventListener("DOMContentLoaded", function() {
     // Array of the div boxes to visually show the colour
     const legendDivs = document.getElementsByClassName("legend");
 
-    let originalLegend = { 0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined };
+    let originalLegend = { 0: null, 1: null, 2: null, 3: null, 4: null };
     const getOriginalLegend = function (changes, namespace) {
         chrome.storage.sync.get("originalLegend", function (items) {
-            originalLegend = items["originalLegend"];
+            Object.assign(originalLegend, items["originalLegend"]);
 
-            if (!originalLegend.hasOwnProperty("0") || !originalLegend.hasOwnProperty("1") || !originalLegend.hasOwnProperty("2") || !originalLegend.hasOwnProperty("3") || !originalLegend.hasOwnProperty("4")) {
+            if (!originalLegend[0] || !originalLegend[1] || !originalLegend[2] || !originalLegend[3] || !originalLegend[4]) {
                 debugLog("Visit any GitHub profile page first!");
                 return;
             }
@@ -23,16 +23,15 @@ document.addEventListener("DOMContentLoaded", function() {
     getOriginalLegend();
     chrome.storage.onChanged.addListener(getOriginalLegend);
 
-    // get ourLegend. if undefined, leave the sliders and backgroundcolor to be the same as original
+    // get ourLegend. if null leave the sliders and backgroundcolor to be the same as original
     (function () {
         chrome.storage.sync.get("ourLegend", function (items) {
             // this isn't that relavent
             let newLegend = {};
             Object.assign(newLegend, items["ourLegend"]);
 
-            if (!newLegend.hasOwnProperty("0") || !newLegend.hasOwnProperty("1") || !newLegend.hasOwnProperty("2") || !newLegend.hasOwnProperty("3") || !newLegend.hasOwnProperty("4")) {
-                console.log("Our legend is undefined! But that's okay");
-                // do stuff
+            if (!newLegend[0] || !newLegend[1] || !newLegend[2] || !newLegend[3] || !newLegend[4]) {
+                console.log("Our legend is null! But that's okay");
             }
 
             // The slider elements (0, 1, 2 correspond to rgb of first, etc. there's 15 (index 14 last) total')
@@ -61,10 +60,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             })();
 
-            // Setup the apply (sync) and reset (sync undefined object by setting the slider value since it listens for input)
+            // Setup the apply (sync) and reset (sync null object by setting the slider value since it listens for input)
             (function() {
                 document.getElementById("apply").addEventListener("click", function() {
-                    // this should save on performance if our legend is equal to the original one on the site, as our content.js will simply skip chaning colour if its undefined
+                    // this should save on performance if our legend is equal to the original one on the site, as our content.js will simply skip chaning colour if its null
                     let equalCount = 0;
                     for(let i = 0; i < legendSize; i++) {
                         if(newLegend[i] == originalLegend[i] || !newLegend[i]) {
@@ -72,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             console.log("equal! " + equalCount);
                         }
                     }
-                    chrome.storage.sync.set((equalCount != legendSize ? {"ourLegend" : newLegend} : { "ourLegend" : {0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined}}), function() {
+                    chrome.storage.sync.set((equalCount != legendSize ? {"ourLegend" : newLegend} : { "ourLegend" : {0: null, 1: null, 2: null, 3: null, 4: null}}), function() {
                         debugLog("Applied!");
                     });
                 }, false);
@@ -81,6 +80,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     Object.assign(newLegend, originalLegend);
                     setFromNewLegend();
                     debugLog("Reset!");
+                }, false);
+
+                document.getElementById("title").addEventListener("click", function() {
+                    document.getElementById("title").innerHTML = "GitHub Commit <i><b>Colour</b></i> Changer";
                 }, false);
             })();
         });

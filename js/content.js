@@ -34,7 +34,7 @@
             let newLegend = {};
             Object.assign(newLegend, items["ourLegend"]);
 
-            if (!newLegend.hasOwnProperty("0") && !newLegend.hasOwnProperty("1") && !newLegend.hasOwnProperty("2") && !newLegend.hasOwnProperty("3") && !newLegend.hasOwnProperty("4")) {
+            if (!newLegend[0] && !newLegend[1] && !newLegend[2] && !newLegend[3] && !newLegend[4]) {
                 let alreadySameCount = 0;
                 for (let i = 0; i < Object.keys(originalLegend).length; i++) {
                     if (legendElements[i].style.backgroundColor == originalLegend[i]) {
@@ -42,7 +42,7 @@
                     }
                 }
                 if (alreadySameCount == Object.keys(originalLegend).length) {
-                    // Everything's the same, and we've recieved a completely undefined object (which means it was reset)
+                    // Everything's the same, and we've recieved a completely null object (which means it was reset)
                     return;
                 }
             }
