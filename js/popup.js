@@ -1,14 +1,16 @@
 document.addEventListener("DOMContentLoaded", function() {
 
+    const legendSize = 5;
+
     // Array of the div boxes to visually show the colour
     const legendDivs = document.getElementsByClassName("legend");
 
     let originalLegend = { 0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined };
-    (function () {
+    const getOriginalLegend = function (changes, namespace) {
         chrome.storage.sync.get("originalLegend", function (items) {
             originalLegend = items["originalLegend"];
 
-            if (!originalLegend[0] || !originalLegend[1] || !originalLegend[2] || !originalLegend[3] || !originalLegend[4]) {
+            if (!originalLegend.hasOwnProperty("0") || !originalLegend.hasOwnProperty("1") || !originalLegend.hasOwnProperty("2") || !originalLegend.hasOwnProperty("3") || !originalLegend.hasOwnProperty("4")) {
                 debugLog("Visit any GitHub profile page first!");
                 return;
             }
@@ -17,15 +19,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 legendDivs[i].style.borderColor = originalLegend[i];
             }
         });
-    })();
+    };
+    getOriginalLegend();
+    chrome.storage.onChanged.addListener(getOriginalLegend);
 
     // get ourLegend. if undefined, leave the sliders and backgroundcolor to be the same as original
     (function () {
         chrome.storage.sync.get("ourLegend", function (items) {
             // this isn't that relavent
-            let newLegend = items["ourLegend"];
+            let newLegend = {};
+            Object.assign(newLegend, items["ourLegend"]);
 
-            if (!newLegend[0] || !newLegend[1] || !newLegend[2] || !newLegend[3] || !newLegend[4]) {
+            if (!newLegend.hasOwnProperty("0") || !newLegend.hasOwnProperty("1") || !newLegend.hasOwnProperty("2") || !newLegend.hasOwnProperty("3") || !newLegend.hasOwnProperty("4")) {
                 console.log("Our legend is undefined! But that's okay");
                 // do stuff
             }
@@ -35,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // initially setup so the ranges/background reflect newLegend
             const setFromNewLegend = function() {
-                for(let i = 0; i < Object.keys(originalLegend).length; i++) {
+                for(let i = 0; i < legendSize; i++) {
                     legendDivs[i].style.backgroundColor = (newLegend[i] ? newLegend[i] : originalLegend[i]);
                     for(let j = 0; j < 3; j++) {
                         colRanges[i * 3 + j].value = rgbStringToRgb((newLegend[i] ? newLegend[i] : originalLegend[i]))[j] * (100 / 255);
@@ -46,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Setup event listeners for range sliders and apply/reset buttons
             (function () {
-                for (let i = 0; i < Object.keys(originalLegend).length; i++) {
+                for (let i = 0; i < legendSize; i++) {
                     for (let j = 0; j < 3; j++) {
                         colRanges[i * 3 + j].addEventListener("input", function () {
                             newLegend[i] = rgbString(Math.round(colRanges[i * 3 + 0].value * 2.55), Math.round(colRanges[i * 3 + 1].value * 2.55), Math.round(colRanges[i * 3 + 2].value * 2.55));
@@ -61,13 +66,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById("apply").addEventListener("click", function() {
                     // this should save on performance if our legend is equal to the original one on the site, as our content.js will simply skip chaning colour if its undefined
                     let equalCount = 0;
-                    for(let i = 0; i < Object.keys(originalLegend).length; i++) {
+                    for(let i = 0; i < legendSize; i++) {
                         if(newLegend[i] == originalLegend[i] || !newLegend[i]) {
                             equalCount++;
                             console.log("equal! " + equalCount);
                         }
                     }
-                    chrome.storage.sync.set((equalCount != Object.keys(originalLegend).length ? {"ourLegend" : newLegend} : { "ourLegend" : {0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined}}), function() {
+                    chrome.storage.sync.set((equalCount != legendSize ? {"ourLegend" : newLegend} : { "ourLegend" : {0: undefined, 1: undefined, 2: undefined, 3: undefined, 4: undefined}}), function() {
                         debugLog("Applied!");
                     });
                 }, false);

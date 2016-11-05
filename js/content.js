@@ -31,9 +31,10 @@
 
     const changeColor = function (changes, namespace) {
         chrome.storage.sync.get("ourLegend", function (items) {
-            const newLegend = items["ourLegend"];
+            let newLegend = {};
+            Object.assign(newLegend, items["ourLegend"]);
 
-            if (!newLegend[0] && !newLegend[1] && !newLegend[2] && !newLegend[3] && !newLegend[4]) {
+            if (!newLegend.hasOwnProperty("0") && !newLegend.hasOwnProperty("1") && !newLegend.hasOwnProperty("2") && !newLegend.hasOwnProperty("3") && !newLegend.hasOwnProperty("4")) {
                 let alreadySameCount = 0;
                 for (let i = 0; i < Object.keys(originalLegend).length; i++) {
                     if (legendElements[i].style.backgroundColor == originalLegend[i]) {
